@@ -1,7 +1,9 @@
 # SpeechT5 Thai
 
-MIT Thai text-to-speech for short product ads on a CPU. This fork selects it
-when commercial-safe mode is on and no other engine is pinned.
+MIT Thai text-to-speech. A listen test of the preset voice found the Thai
+unintelligible, so this fork does not select it by default. Commercial-safe
+mode uses [VoxCPM2](voxcpm2.md) instead. Keep this engine only when you need
+a small CPU download and can accept the quality.
 
 The weights are [`ThuraAung1601/speecht5_for_thai_tts_v1`](https://huggingface.co/ThuraAung1601/speecht5_for_thai_tts_v1)
 (MIT, fine-tune of `microsoft/speecht5_tts`). The vocoder is

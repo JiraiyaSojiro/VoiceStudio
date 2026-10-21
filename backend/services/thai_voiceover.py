@@ -171,7 +171,7 @@ def render(
     voice: str = "slt",
     speed: float = 1.0,
     pause_s: float = 0.4,
-    engine: str = "speecht5-thai",
+    engine: str = "voxcpm2",
     reference: Path | None = None,
     reference_text: str | None = None,
 ) -> Path:
@@ -182,11 +182,6 @@ def render(
     if output.suffix.lower() not in {".wav", ".m4a"}:
         raise VoiceoverError("Output must be a .wav or .m4a file.")
     if engine == "voxcpm2":
-        if reference is None:
-            raise VoiceoverError(
-                "VoxCPM2 voice cloning needs --ref pointing at your own 20–30 s WAV or M4A. "
-                "For a preset Thai voice without a recording, omit --engine."
-            )
         assert_repo_allowed("openbmb/VoxCPM2")
         clips, sample_rate = _voxcpm_lines(lines, reference, reference_text)
     elif engine in {"speecht5-thai", "speecht5"}:
@@ -209,7 +204,7 @@ def render(
             raise VoiceoverError("No lines to speak.")
     else:
         raise VoiceoverError(
-            f"Unknown engine {engine!r}. Use speecht5-thai (CPU preset) or voxcpm2 (clone)."
+            f"Unknown engine {engine!r}. Use voxcpm2 (Thai, Apache-2.0) or speecht5-thai."
         )
     joined = join_lines(clips, sample_rate, pause_s)
     work = output.with_suffix(".raw.wav")
@@ -225,7 +220,7 @@ def render(
     return output
 
 
-def _voxcpm_lines(lines, reference: Path, reference_text: str | None):
+def _voxcpm_lines(lines, reference: Path | None, reference_text: str | None):
     import torch
 
     from services.tts_backend import VoxCPM2Backend
@@ -240,7 +235,7 @@ def _voxcpm_lines(lines, reference: Path, reference_text: str | None):
         tensor = backend.generate(
             line,
             language="th",
-            ref_audio=str(reference),
+            ref_audio=str(reference) if reference is not None else None,
             ref_text=reference_text,
             speed=1.0,
         )

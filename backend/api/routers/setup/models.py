@@ -603,7 +603,7 @@ def list_models():
     Uses a 10 s response cache to avoid repeated ``scan_cache_dir()`` disk
     walks when the frontend polls.
     """
-    from core.commercial_safe import THAI_TTS_REPO, assess, enabled
+    from core.commercial_safe import VOXCPM_REPO, assess, enabled
 
     platform_tags = _current_platform_tags()
     safe = enabled()
@@ -648,7 +648,7 @@ def list_models():
             # tell a commercial-safe install to download it.
             required = False
             curated = False
-        if safe and m["repo_id"] == THAI_TTS_REPO:
+        if safe and m["repo_id"] == VOXCPM_REPO:
             required = True
             curated = True
         out.append({
@@ -717,7 +717,7 @@ def recommendations():
     else:
         device_label = f"{target_os} / {target_arch}"
 
-    from core.commercial_safe import THAI_TTS_REPO, assess, enabled
+    from core.commercial_safe import VOXCPM_REPO, assess, enabled
 
     safe = enabled()
     # Curated preset for this host, in catalog order (required entries lead).
@@ -727,9 +727,9 @@ def recommendations():
         and (not safe or assess(m["repo_id"]).allowed)
     ]
     if safe:
-        thai = next((m for m in KNOWN_MODELS if m["repo_id"] == THAI_TTS_REPO), None)
+        thai = next((m for m in KNOWN_MODELS if m["repo_id"] == VOXCPM_REPO), None)
         if thai is not None and _model_supported(thai):
-            curated = [thai] + [m for m in curated if m["repo_id"] != THAI_TTS_REPO]
+            curated = [thai] + [m for m in curated if m["repo_id"] != VOXCPM_REPO]
 
     if not (is_mac_arm or has_cuda or has_rocm):
         # CPU-only preset: lead with the light Whisper (small) so a user working
@@ -771,8 +771,8 @@ def recommendations():
         )
     if safe:
         rationale = (
-            "Commercial-safe preset: SpeechT5 Thai (MIT) is the voice for ads. "
-            "Optional picks are models whose licenses allow commercial use. "
+            "Commercial-safe preset: VoxCPM2 (Apache-2.0) is the Thai voice for ads. "
+            "It runs on CPU. Optional picks are models whose licenses allow commercial use. "
             "Non-commercial weights such as OmniVoice are left out."
         )
 
@@ -798,7 +798,7 @@ def recommendations():
         # the wizard counts it toward the remaining download instead of "all set".
         installed = rid in cached_ids and cache_is_complete(meta)
         required = bool(meta.get("required", False))
-        if safe and rid == THAI_TTS_REPO:
+        if safe and rid == VOXCPM_REPO:
             required = True
         entries.append({
             "repo_id": rid,

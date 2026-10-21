@@ -24,8 +24,8 @@ and are not treated as a new license.
 
 | Use | Model | Commercial OK | Notes |
 | --- | --- | --- | --- |
-| Preset Thai voice, CPU | `ThuraAung1601/speecht5_for_thai_tts_v1` | Yes | MIT on the card (`f8c8b0369c26119c8dbf79e3e8d907c43286604c`). Fine-tune of MIT `microsoft/speecht5_tts` on `lunarlist/edited_common_voice`. The dataset card says Common Voice (CC0) voices were modified so they would not sound like the originals, and does not name the modifier. Vocoder `microsoft/speecht5_hifigan` and timbre `Matthijs/cmu-arctic-xvectors` are MIT. Not a clone of your recording. |
-| Clone your own 20–30 s clip | `openbmb/VoxCPM2` | Yes | Apache-2.0, and the card says the model is free for commercial use. Thai is one of the 30 languages. The card says training used more than 2 million hours of multilingual speech and does not list source-audio licenses. Heavy on CPU (about 5 GB of weights and 8 GB of free RAM). |
+| Default Thai voice, CPU | `openbmb/VoxCPM2` | Yes | Apache-2.0, and the card says the model is free for commercial use. Thai is one of the 30 languages. Plain text needs no reference clip; `--ref` clones a recording. The card says training used more than 2 million hours and does not list source-audio licenses. About 5 GB of weights and 8 GB of free RAM. Official PyTorch weights, not the Q8 GGUF. |
+| Small MIT preset | `ThuraAung1601/speecht5_for_thai_tts_v1` | Yes | MIT on the card. A listen test found the Thai unintelligible, so it is not the default. Fine-tune of MIT `microsoft/speecht5_tts` on `lunarlist/edited_common_voice`. The dataset card says Common Voice (CC0) voices were modified so they would not sound like the originals, and does not name the modifier. |
 | Default upstream voice | `k2-fsa/OmniVoice` | No | CC-BY-NC weights. Clips cannot be used in ads. |
 
 Rejected Thai checkpoints that are not in the app catalog, checked the same day:
@@ -38,6 +38,13 @@ Rejected Thai checkpoints that are not in the app catalog, checked the same day:
 | `facebook/mms-tts-tha`, `tranhuyluyen/piper-voices-thai` | CC-BY-NC-4.0. Piper has no official Thai voice; these files inherit MMS. |
 | `3scale/qwen-tts-thai-sft` | Apache-2.0 tag. The card does not document the Thai fine-tune, and the config has no Thai language id. Not cleared. Too large for a small CPU machine. |
 | `chuubjak/vits-tts-thai` | No license tag on the card. Not cleared. |
+| `pythainlp/thaitts-onnx` | Apache-2.0 export of `lunarlist/tts-thai`. Same edited-Common-Voice line as SpeechT5. Whisper large-v3 character error on the shop script was about 88%. Not used. |
+| `Qwen/Qwen3-TTS-12Hz-1.7B-Base` | Apache-2.0. The card lists 10 languages and Thai is not one of them. |
+| `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` | Apache-2.0. The card lists 9 languages and Thai is not one of them. |
+| `OpenMOSS-Team/MOSS-TTS-Nano` | Apache-2.0, 20 languages, no Thai. |
+| `VIZINTZOR/KaoPadTTS-85M` | No license on the card or the code repo. Not cleared. |
+| `VIZINTZOR/VachanaTTS` | Card tag is MIT. An earlier project by the same author is a fine-tune of CC-BY-NC `facebook/mms-tts-tha`, and this card does not document the training audio. Not cleared. |
+| `dubbing-ai/SiangTTS-VoxCPM2-Thai-LoRA` | CC-BY-SA-4.0. Commercial use is allowed with share-alike. Not the default, because the Apache-2.0 base already passed the intelligibility check. |
 
 ## Catalog
 
@@ -133,4 +140,4 @@ The app can also touch these families. None is cleared for ads.
 - `Argos language-pair packages` — license `NOASSERTION`, not cleared
 - `User-provided Sherpa ONNX / RVC voice models / GPT-SoVITS server / custom MLX and env-overridden repos` — license `NOASSERTION`, not cleared
 
-Shop voiceovers: [SpeechT5 Thai](engines/speecht5-thai.md).
+Shop voiceovers: [VoxCPM2](engines/voxcpm2.md).

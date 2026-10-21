@@ -15,11 +15,31 @@ zero-shot voice cloning, and — uniquely among VoiceStudio's engines —
   Norwegian, Polish, Portuguese, Russian, Spanish, Swahili, Swedish,
   Tagalog, Thai, Turkish, Vietnamese.
 
+## Thai ads on CPU
+
+Plain Thai text needs no reference clip. Pass `--ref` only when you want to
+clone a recording. The card is Apache-2.0 and says the weights are free for
+commercial use. It also says training used more than 2 million hours and
+does not list source-audio licenses.
+
+On a 4-core CPU with the denoiser off, a short line took about 4 seconds
+after the weights were loaded. Budget about 8 GB of free RAM and about 5 GB
+of disk. A Q8 GGUF build of the same weights was less stable on this script;
+use the official PyTorch weights.
+
+An English voice-design prefix leaked English words into the Thai. The shop
+script does not add one. On the five-line shop script, Whisper large-v3
+scored the official weights at about 6% character error line by line
+(`มั้ย` heard as `ไหม`, and `ตะกร้า` heard as `ตะกะ`). A second draw of the
+last line was less stable, so listen to a take before you publish it. A Q8
+GGUF build of the same weights scored about 22% on its best seed and is not
+the default.
+
 ## Requirements
 
 - Python ≥ 3.10, PyTorch ≥ 2.5.
 - CUDA ≥ 12 recommended for full speed; MPS (Apple Silicon) and CPU also
-  work.
+  work. CPU needs about 8 GB free.
 
 ## Setup
 

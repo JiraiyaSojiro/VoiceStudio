@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Thai product-ad voiceover from a text file. One line is one sentence.
 
-Commercial-safe weights only. The default engine is MIT SpeechT5 Thai
-(preset timbres, CPU). ``--engine voxcpm2 --ref clip.wav`` clones a 20–30 s
-recording with Apache-2.0 VoxCPM2.
+Commercial-safe weights only. The default engine is Apache-2.0 VoxCPM2,
+which speaks Thai with no reference clip. ``--ref clip.wav`` clones your
+own recording. ``--engine speecht5-thai`` is the small MIT preset voice;
+a listen test found it unintelligible.
 
 Example::
 
-    python scripts/thai_voiceover.py script.txt -o ad.wav --voice slt --pause 0.4
+    python scripts/thai_voiceover.py script.txt -o ad.wav --pause 0.4
 """
 from __future__ import annotations
 
@@ -30,8 +31,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--voice", default=DEFAULT_VOICE, choices=PRESET_VOICES)
     parser.add_argument("--speed", type=float, default=1.0, help="1.0 is unchanged. 1.1 is slightly faster.")
     parser.add_argument("--pause", type=float, default=0.4, help="Silence between lines, in seconds")
-    parser.add_argument("--engine", default="speecht5-thai", choices=["speecht5-thai", "voxcpm2"])
-    parser.add_argument("--ref", type=Path, default=None, help="Your own 20–30 s WAV or M4A. Requires voxcpm2.")
+    parser.add_argument("--engine", default="voxcpm2", choices=["voxcpm2", "speecht5-thai"])
+    parser.add_argument("--ref", type=Path, default=None, help="Optional 20–30 s WAV or M4A to clone. VoxCPM2 only.")
     parser.add_argument("--ref-text", default=None, help="Transcript of --ref, if you have one")
     args = parser.parse_args(argv)
     try:

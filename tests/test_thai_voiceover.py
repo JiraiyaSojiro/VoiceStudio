@@ -67,9 +67,25 @@ def test_speecht5_refuses_a_reference_clip(tmp_path: Path):
         )
 
 
-def test_voxcpm_requires_a_reference(tmp_path: Path):
-    with pytest.raises(VoiceoverError, match="--ref"):
-        render(["สวัสดี"], tmp_path / "out.wav", engine="voxcpm2")
+def test_voxcpm_plain_speech_needs_no_reference(tmp_path: Path, monkeypatch):
+    import torch
+
+    from services import tts_backend
+
+    monkeypatch.setattr(
+        tts_backend.VoxCPM2Backend,
+        "is_available",
+        classmethod(lambda cls: (True, "ready")),
+    )
+
+    def generate(self, text, **kw):
+        assert not kw.get("ref_audio")
+        assert text == "สวัสดี"
+        return torch.zeros(1, 1600)
+
+    monkeypatch.setattr(tts_backend.VoxCPM2Backend, "generate", generate)
+    output = render(["สวัสดี"], tmp_path / "out.wav", engine="voxcpm2")
+    assert output.exists()
 
 
 def test_loudnorm_keeps_the_rate_and_the_target(tmp_path: Path):

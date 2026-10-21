@@ -31,7 +31,7 @@
 | Clone a voice or design your own | Dub videos with timed speech | Local API & MCP for agents |
 | Dictate with a floating widget | Stories, audiobooks & batch jobs | Reusable recipes & watch folders |
 
-Start with **SpeechT5 Thai** when commercial-safe mode is on (the default in this fork), or choose another engine whose license allows the use you need. OmniVoice stays available only when `VOICESTUDIO_COMMERCIAL_SAFE=0`, and its weights are not for ads. [Commercial licenses](docs/COMMERCIAL_LICENSES.md). [Features & engine catalog](docs/feature-catalog.md).
+Start with **VoxCPM2** when commercial-safe mode is on (the default in this fork). It is Apache-2.0 and speaks Thai without a reference clip. OmniVoice stays available only when `VOICESTUDIO_COMMERCIAL_SAFE=0`, and its weights are not for ads. [Commercial licenses](docs/COMMERCIAL_LICENSES.md). [Features & engine catalog](docs/feature-catalog.md).
 
 Local workflows run on your hardware. Remote services are optional; usage analytics requires consent.
 
@@ -157,15 +157,15 @@ Support development: [GitHub Sponsors](https://github.com/sponsors/debpalash) ·
 
 ## พากย์เสียงโฆษณาสินค้าภาษาไทย
 
-ใช้กับคลิปสินค้า 10–15 วินาทีบนเครื่อง Linux ที่ไม่มี GPU เสียงค่าเริ่มต้นคือ SpeechT5 Thai (สัญญาอนุญาต MIT) ไม่ใช่ OmniVoice ซึ่งเป็น CC-BY-NC และใช้ในโฆษณาไม่ได้
+ใช้กับคลิปสินค้า 10–15 วินาทีบนเครื่อง Linux ที่ไม่มี GPU เสียงค่าเริ่มต้นคือ VoxCPM2 (สัญญาอนุญาต Apache-2.0 พูดไทยได้โดยไม่ต้องมีไฟล์เสียงต้นฉบับ) ไม่ใช่ OmniVoice ซึ่งเป็น CC-BY-NC และใช้ในโฆษณาไม่ได้ SpeechT5 Thai เป็น MIT แต่ฟังแล้วไม่ชัด จึงไม่ใช้เป็นค่าเริ่มต้น
 
-เตรียมเครื่อง (ครั้งเดียว):
+เตรียมเครื่อง (ครั้งเดียว) ต้องมีแรมว่างประมาณ 8 GB:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cpu
-pip install transformers sentencepiece soundfile huggingface_hub numpy pyyaml
+pip install "voxcpm==2.0.3" soundfile
 sudo apt install ffmpeg
 ```
 
@@ -180,15 +180,16 @@ sudo apt install ffmpeg
 
 ```bash
 PYTHONPATH=backend python scripts/thai_voiceover.py script.txt \
-  -o ad.wav --voice slt --speed 1.0 --pause 0.4
+  -o ad.wav --speed 1.0 --pause 0.4
 ```
 
-- `--voice` คือ `slt` (ค่าเริ่มต้น), `clb`, `bdl`, `rms`, `jmk`, `awb`, `ksp` เป็นเสียงสำเร็จรูป ไม่ใช่เสียงที่โคลนจากไฟล์ของคุณ
+- คำสั่งนี้ใช้ VoxCPM2 อ่านทีละบรรทัด ไม่ต้องมีไฟล์เสียงอ้างอิง ครั้งแรกจะดาวน์โหลดน้ำหนักประมาณ 5 GB
 - `--speed` 1.0 คือความเร็วเดิม 1.1 เร็วขึ้นเล็กน้อย
 - `--pause` คือช่วงเงียบระหว่างบรรทัด หน่วยเป็นวินาที
 - `-o ad.m4a` ได้ไฟล์ AAC
-- โคลนเสียงจากไฟล์ที่อัดเอง 20–30 วินาที ใช้ VoxCPM2 (Apache-2.0 พูดไทยได้) ซึ่งกินแรมประมาณ 8 GB และช้าบน CPU: `--engine voxcpm2 --ref my-voice.wav`
-- รายละเอียดเครื่องและข้อสงสัยเรื่องข้อมูลฝึก: [SpeechT5 Thai](docs/engines/speecht5-thai.md) และ [สัญญาอนุญาต](docs/COMMERCIAL_LICENSES.md)
+- โคลนเสียงจากไฟล์ที่อัดเอง 20–30 วินาที: `--ref my-voice.wav`
+- `--engine speecht5-thai --voice slt` เป็นเสียง MIT ขนาดเล็ก ใช้ได้บนเครื่องแรมน้อย แต่ทดสอบแล้วฟังภาษาไทยไม่ออก
+- รายละเอียดเครื่องและข้อสงสัยเรื่องข้อมูลฝึก: [VoxCPM2](docs/engines/voxcpm2.md) และ [สัญญาอนุญาต](docs/COMMERCIAL_LICENSES.md)
 
 ## License & responsible use
 

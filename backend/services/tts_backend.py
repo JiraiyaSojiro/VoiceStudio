@@ -11,7 +11,7 @@ A uniform protocol for every TTS engine. Today we ship:
 Callers should use `get_active_tts_backend()` to pick the configured engine
 instead of importing a specific class. The selection is controlled by the
 `OMNIVOICE_TTS_BACKEND` env var. When commercial-safe mode is on (the fork
-default) the fallback engine is ``speecht5-thai``; otherwise it is
+default) the fallback engine is ``voxcpm2``; otherwise it is
 ``omnivoice``.
 
 The protocol deliberately stays narrow: `generate(...)` returns a 1-channel
@@ -4190,7 +4190,7 @@ def active_backend_id() -> str:
     # off) must not fall back to the non-commercial OmniVoice weights.
     from core import prefs
     from core.commercial_safe import enabled
-    default = "speecht5-thai" if enabled() else "omnivoice"
+    default = "voxcpm2" if enabled() else "omnivoice"
     return prefs.resolve("tts_backend", env="OMNIVOICE_TTS_BACKEND", default=default)
 
 

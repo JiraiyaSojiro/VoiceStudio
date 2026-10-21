@@ -76,7 +76,7 @@ def test_default_tts_engine_follows_the_flag(monkeypatch):
     prefs.delete("tts_backend")
     monkeypatch.delenv("OMNIVOICE_TTS_BACKEND", raising=False)
     monkeypatch.delenv("VOICESTUDIO_COMMERCIAL_SAFE", raising=False)
-    assert active_backend_id() == "speecht5-thai"
+    assert active_backend_id() == "voxcpm2"
     monkeypatch.setenv("VOICESTUDIO_COMMERCIAL_SAFE", "0")
     assert active_backend_id() == "omnivoice"
 
@@ -90,13 +90,14 @@ def test_safe_catalogue_hides_omnivoice_and_requires_thai(commercial_on):
     by_id = {row["repo_id"]: row for row in payload["models"]}
     assert by_id["k2-fsa/OmniVoice"]["commercial_ok"] is False
     assert by_id["k2-fsa/OmniVoice"]["required"] is False
-    thai = by_id["ThuraAung1601/speecht5_for_thai_tts_v1"]
+    thai = by_id["openbmb/VoxCPM2"]
     assert thai["commercial_ok"] is True
     assert thai["required"] is True
+    assert by_id["ThuraAung1601/speecht5_for_thai_tts_v1"]["commercial_ok"] is True
     recommendations = setup_models.recommendations()
     ids = [row["repo_id"] for row in recommendations["models"]]
     assert "k2-fsa/OmniVoice" not in ids
-    assert ids[0] == "ThuraAung1601/speecht5_for_thai_tts_v1"
+    assert ids[0] == "openbmb/VoxCPM2"
 
 
 def test_license_audit_doc_matches_the_gate():
