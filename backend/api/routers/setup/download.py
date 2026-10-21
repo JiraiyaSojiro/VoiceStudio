@@ -578,6 +578,14 @@ async def install_model(req: InstallModelRequest):
                 + ", ".join(m["repo_id"] for m in KNOWN_MODELS)
             ),
         )
+    from core.commercial_safe import assert_repos_allowed
+
+    dependency_ids = [
+        item["repo_id"]
+        for item in (model_spec.get("dependencies") or [])
+        if isinstance(item, dict) and isinstance(item.get("repo_id"), str)
+    ]
+    assert_repos_allowed([req.repo_id, *dependency_ids])
     allow_patterns = list(model_spec.get("allow_patterns") or []) or None
     target = (req.target or "local").strip() or "local"
     if target != "local":

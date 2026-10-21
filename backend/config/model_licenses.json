@@ -2947,6 +2947,132 @@
         ],
         "identified_components": []
       }
+    },
+    {
+      "id": "ThuraAung1601/speecht5_for_thai_tts_v1",
+      "license": "mit",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "ThuraAung1601/speecht5_for_thai_tts_v1",
+      "source_url": "https://huggingface.co/ThuraAung1601/speecht5_for_thai_tts_v1",
+      "evidence_url": "https://huggingface.co/ThuraAung1601/speecht5_for_thai_tts_v1/blob/f8c8b0369c26119c8dbf79e3e8d907c43286604c/README.md",
+      "revision": "f8c8b0369c26119c8dbf79e3e8d907c43286604c",
+      "engines": [
+        "speecht5-thai"
+      ],
+      "configured_at": "backend/config/models.yaml",
+      "notes": "MIT on the model card at the pinned revision. Fine-tune of microsoft/speecht5_tts (MIT) on lunarlist/edited_common_voice. The dataset card says Common Voice voices were modified so they would not sound like the originals and does not name the modifier. commercial_use stays false until a reviewed clearance exists; the fork's commercial-safe gate allows MIT separately.",
+      "runtime_revision": "f8c8b0369c26119c8dbf79e3e8d907c43286604c",
+      "runtime_pin_scope": "central",
+      "runtime_pin_source": "backend/services/hf_revisions.py",
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
+    },
+    {
+      "id": "microsoft/speecht5_hifigan",
+      "license": "mit",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "microsoft/speecht5_hifigan",
+      "source_url": "https://huggingface.co/microsoft/speecht5_hifigan",
+      "evidence_url": "https://huggingface.co/microsoft/speecht5_hifigan/blob/bb6f429406e86a9992357a972c0698b22043307d/README.md",
+      "revision": "bb6f429406e86a9992357a972c0698b22043307d",
+      "engines": [
+        "speecht5-thai"
+      ],
+      "configured_at": "backend/config/models.yaml dependency of ThuraAung1601/speecht5_for_thai_tts_v1",
+      "notes": "MIT vocoder downloaded with SpeechT5 Thai. Licence identifier is the model card at the pinned revision.",
+      "runtime_revision": "bb6f429406e86a9992357a972c0698b22043307d",
+      "runtime_pin_scope": "central",
+      "runtime_pin_source": "backend/services/hf_revisions.py",
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
+    },
+    {
+      "id": "Matthijs/cmu-arctic-xvectors",
+      "license": "mit",
+      "commercial_use": false,
+      "review_status": "unreviewed",
+      "credit": "Matthijs/cmu-arctic-xvectors",
+      "source_url": "https://huggingface.co/datasets/Matthijs/cmu-arctic-xvectors",
+      "evidence_url": "https://huggingface.co/datasets/Matthijs/cmu-arctic-xvectors/blob/5c1297a9eb6c91714ea77c0d4ac5aca9b6a952e5/README.md",
+      "revision": "5c1297a9eb6c91714ea77c0d4ac5aca9b6a952e5",
+      "engines": [
+        "speecht5-thai"
+      ],
+      "configured_at": "backend/services/thai_tts.py",
+      "notes": "MIT dataset of CMU Arctic x-vectors used as preset timbres for SpeechT5 Thai. Not a clone of a user recording.",
+      "runtime_revision": "5c1297a9eb6c91714ea77c0d4ac5aca9b6a952e5",
+      "runtime_pin_scope": "central",
+      "runtime_pin_source": "backend/services/hf_revisions.py",
+      "component_closure": "incomplete",
+      "commercial_inference": "unknown",
+      "commercial_outputs": "unknown",
+      "documents": [],
+      "artifacts": [],
+      "required_components": [],
+      "upstream_access": "unknown",
+      "audit_observations": {
+        "commercial_inference": {
+          "status": "unreviewed",
+          "scope": "Selected weight/component only; not complete workflow clearance."
+        },
+        "output_terms": {
+          "status": "not_assessed",
+          "ownership_or_all_rights_cleared": false
+        },
+        "sources": [],
+        "open_questions": [
+          "Governing terms at installed revision and relevant required components",
+          "Attribution/NOTICE/redistribution duties",
+          "Reference voice and input rights, consent, training-provenance scope"
+        ],
+        "identified_components": []
+      }
     }
   ],
   "dynamic_assets": [

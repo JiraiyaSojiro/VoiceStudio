@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "下載",
+    "commercialSafeBanner": "已開啟商用安全模式。授權不允許用於廣告的模型會維持封鎖。",
+    "commercialBlocked": "不可商用",
+    "commercialConditions": "商用有額外條件。發布前請閱讀授權。",
+    "commercialDownloadBlocked": "此模型的授權不允許商用。",
     "install": "安裝",
     "installing": "工作",
     "installed": "已安裝",

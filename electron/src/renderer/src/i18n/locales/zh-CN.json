@@ -397,6 +397,10 @@
   },
   "modelMaintenance": {
     "download": "下载",
+    "commercialSafeBanner": "已开启商用安全模式。许可证不允许用于广告的模型保持阻止。",
+    "commercialBlocked": "不可商用",
+    "commercialConditions": "商用有额外条件。发布前请阅读许可证。",
+    "commercialDownloadBlocked": "此模型的许可证不允许商用。",
     "install": "安装",
     "installing": "处理中",
     "installed": "已安装",

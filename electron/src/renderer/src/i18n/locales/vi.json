@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "Tải xuống",
+    "commercialSafeBanner": "Chế độ an toàn thương mại đang bật. Mô hình có giấy phép không cho phép quảng cáo vẫn bị chặn.",
+    "commercialBlocked": "Không dùng cho mục đích thương mại",
+    "commercialConditions": "Việc dùng thương mại có điều kiện thêm. Hãy đọc giấy phép trước khi đăng.",
+    "commercialDownloadBlocked": "Giấy phép của mô hình này không cho phép dùng thương mại.",
     "install": "cài đặt",
     "installing": "đang…",
     "installed": "đã cài đặt",

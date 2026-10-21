@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "ダウンロード",
+    "commercialSafeBanner": "商用セーフモードはオンです。広告に使えないライセンスのモデルはブロックされたままです。",
+    "commercialBlocked": "商用利用不可",
+    "commercialConditions": "商用利用には追加の条件があります。公開前にライセンスを読んでください。",
+    "commercialDownloadBlocked": "このモデルのライセンスは商用利用を許可していません。",
     "install": "インストール",
     "installing": "働いている",
     "installed": "インストールされています",

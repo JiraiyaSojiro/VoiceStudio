@@ -10,7 +10,9 @@ A uniform protocol for every TTS engine. Today we ship:
 
 Callers should use `get_active_tts_backend()` to pick the configured engine
 instead of importing a specific class. The selection is controlled by the
-`OMNIVOICE_TTS_BACKEND` env var (default: `"omnivoice"`).
+`OMNIVOICE_TTS_BACKEND` env var. When commercial-safe mode is on (the fork
+default) the fallback engine is ``speecht5-thai``; otherwise it is
+``omnivoice``.
 
 The protocol deliberately stays narrow: `generate(...)` returns a 1-channel
 tensor sampled at `sample_rate`. Streaming is left for a later pass — the
@@ -2365,6 +2367,99 @@ class KittenTTSBackend(TTSBackend):
                 + self._split_to_token_budget(onnx, right, voice, speed))
 
 
+class SpeechT5ThaiBackend(TTSBackend):
+    """MIT Thai TTS for short product ads on CPU.
+
+    Weights are ``ThuraAung1601/speecht5_for_thai_tts_v1`` (MIT fine-tune of
+    ``microsoft/speecht5_tts``) with the MIT HiFi-GAN vocoder. The timbre is
+    one CMU Arctic x-vector, not a clone of a recording. Cloning a 20–30 s
+    clip uses VoxCPM2 (Apache-2.0), which also speaks Thai.
+    """
+
+    id = "speecht5-thai"
+    display_name = "SpeechT5 Thai (MIT, preset voices, CPU)"
+    gpu_compat = ("cpu", "cuda")
+    supports_cloning = False
+    supports_voice_design = False
+    PRESET_VOICES = ["slt", "clb", "bdl", "rms", "jmk", "awb", "ksp"]
+    DEFAULT_VOICE = "slt"
+    language_display_names = {"th": "Thai"}
+
+    @classmethod
+    def is_available(cls) -> tuple[bool, str]:
+        try:
+            import transformers  # noqa: F401
+            return True, "ready"
+        except ImportError as exc:
+            return False, f"transformers not installed: {exc}"
+
+    @property
+    def sample_rate(self) -> int:
+        from services.thai_tts import SAMPLE_RATE
+        return SAMPLE_RATE
+
+    @property
+    def supported_languages(self) -> list[str]:
+        return ["th"]
+
+    @classmethod
+    def configured_identity(cls) -> str:
+        from core.commercial_safe import THAI_TTS_REPO
+        return THAI_TTS_REPO
+
+    def generate(self, text: str, **kw) -> torch.Tensor:
+        self._check_language(kw.get("language"))
+        import numpy as np
+
+        from services.thai_tts import DEFAULT_VOICE, PRESET_VOICES, synthesize
+
+        voice = kw.get("voice") or DEFAULT_VOICE
+        if voice not in PRESET_VOICES:
+            logger.info(
+                "SpeechT5 Thai: unknown voice %r, falling back to %r. Valid: %s",
+                voice, DEFAULT_VOICE, PRESET_VOICES,
+            )
+            voice = DEFAULT_VOICE
+        if kw.get("ref_audio"):
+            raise TTSInputError(
+                "SpeechT5 Thai cannot clone a recording. It uses a fixed MIT "
+                "CMU Arctic timbre. To clone your own voice, select VoxCPM2 "
+                "(Apache-2.0, Thai) and pass a 20–30 s reference clip."
+            )
+        try:
+            audio, sample_rate = synthesize(text, voice=voice, mark=False)
+        except ValueError as exc:
+            raise TTSInputError(str(exc)) from exc
+        speed = float(kw.get("speed", 1.0))
+        if abs(speed - 1.0) >= 1e-3:
+            audio = _pace_mono(audio, sample_rate, speed)
+        wav = torch.from_numpy(np.asarray(audio, dtype=np.float32)).float()
+        if wav.ndim == 1:
+            wav = wav.unsqueeze(0)
+        return wav
+
+
+def _pace_mono(audio, sample_rate: int, speed: float):
+    """Pitch-preserving tempo change for one mono clip. Identity at speed 1."""
+    import tempfile
+    import wave
+    from pathlib import Path
+
+    import numpy as np
+
+    from services.thai_voiceover import apply_tempo, write_wav
+
+    with tempfile.TemporaryDirectory(prefix="speecht5-pace-") as tmp:
+        folder = Path(tmp)
+        src = folder / "in.wav"
+        dst = folder / "out.wav"
+        write_wav(src, np.asarray(audio, dtype=np.float32), sample_rate)
+        apply_tempo(src, dst, speed)
+        with wave.open(str(dst), "rb") as handle:
+            frames = handle.readframes(handle.getnframes())
+    return np.frombuffer(frames, dtype=np.int16).astype(np.float32) / 32767.0
+
+
 # ── MLX-Audio (mac-ARM engine multiplexer) ──────────────────────────────────
 
 
@@ -3439,6 +3534,7 @@ _REGISTRY: dict[str, type[TTSBackend]] = _LazyRegistry({
     "omnivoice":     OmniVoiceBackend,
     "cosyvoice":     CosyVoiceBackend,
     "kittentts":     KittenTTSBackend,
+    "speecht5-thai": SpeechT5ThaiBackend,
     "mlx-audio":     MLXAudioBackend,
     "voxcpm2":       VoxCPM2Backend,
     "moss-tts-nano": MossTTSNanoBackend,
@@ -3467,6 +3563,7 @@ _INSTALL_HINTS: dict[str, str] = {
     "omnivoice-subprocess": "No extra install; uses the host OmniVoice install. Opt in with OMNIVOICE_TTS_BACKEND=omnivoice-subprocess (same model in a killable sidecar, for unattended reliability).",
     "cosyvoice":     "git clone --recursive FunAudioLLM/CosyVoice + pip install -r requirements.txt + SoX",
     "kittentts":     "pip install kittentts  (ONNX, CPU-only, ~80 MB)",
+    "speecht5-thai": "CPU torch + transformers. MIT Thai TTS (~580 MB) plus the MIT HiFi-GAN vocoder. Preset voices only; clone with VoxCPM2.",
     "mlx-audio":     "pip install mlx-audio  (Apple Silicon only)",
     "voxcpm2":       'pip install "voxcpm>=2.0.3"  (floor: 2.0.3 fixed Apple-Silicon audio quality; CPU/MPS supported, CUDA recommended for speed)',
     "moss-tts-nano": "git clone OpenMOSS/MOSS-TTS-Nano && pip install -e .  (not on PyPI)",
@@ -3515,6 +3612,7 @@ _ENGINE_DOCS: dict[str, str] = {
     "omnivoice-gguf":       "docs/engines/omnivoice-gguf.md",
     "cosyvoice":            "docs/engines/cosyvoice.md",
     "kittentts":            "docs/engines/kittentts.md",
+    "speecht5-thai":        "docs/engines/speecht5-thai.md",
     "mlx-audio":            "docs/engines/mlx-audio.md",
     "voxcpm2":              "docs/engines/voxcpm2.md",
     "moss-tts-nano":        "docs/engines/moss-tts-nano.md",
@@ -4088,8 +4186,12 @@ def gpu_routing_verdict() -> dict:
 def active_backend_id() -> str:
     # Env var > persisted UI choice > default. Env wins so power-users can
     # pin a backend without the Settings picker silently undoing it.
+    # Commercial-safe mode (on unless VOICESTUDIO_COMMERCIAL_SAFE is turned
+    # off) must not fall back to the non-commercial OmniVoice weights.
     from core import prefs
-    return prefs.resolve("tts_backend", env="OMNIVOICE_TTS_BACKEND", default="omnivoice")
+    from core.commercial_safe import enabled
+    default = "speecht5-thai" if enabled() else "omnivoice"
+    return prefs.resolve("tts_backend", env="OMNIVOICE_TTS_BACKEND", default=default)
 
 
 # Cached active backend instance + its id (MM2-01). Without this, every call
@@ -4139,6 +4241,9 @@ def ensure_engine_licence(cls) -> None:
     except Exception:  # noqa: BLE001 — unknown model: gate every model the engine ships
         identity = None
     ensure_engine_accepted(engine_id, identity)
+    from core.commercial_safe import assert_engine_weights
+
+    assert_engine_weights(engine_id, identity)
 
 
 def ensure_active_engine_licence() -> None:

@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "다운로드",
+    "commercialSafeBanner": "상업적 안전 모드가 켜져 있습니다. 광고에 쓸 수 없는 라이선스의 모델은 차단된 채로 둡니다.",
+    "commercialBlocked": "상업적 사용 불가",
+    "commercialConditions": "상업적 사용에는 추가 조건이 있습니다. 게시하기 전에 라이선스를 읽으세요.",
+    "commercialDownloadBlocked": "이 모델의 라이선스는 상업적 사용을 허용하지 않습니다.",
     "install": "설치",
     "installing": "작업…",
     "installed": "설치됨",

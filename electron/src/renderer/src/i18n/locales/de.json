@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "Herunterladen",
+    "commercialSafeBanner": "Der kommerziell sichere Modus ist an. Modelle, deren Lizenz keine Werbung erlaubt, bleiben gesperrt.",
+    "commercialBlocked": "Nicht für kommerzielle Nutzung",
+    "commercialConditions": "Kommerzielle Nutzung hat zusätzliche Bedingungen. Lies die Lizenz, bevor du veröffentlichst.",
+    "commercialDownloadBlocked": "Die Lizenz dieses Modells erlaubt keine kommerzielle Nutzung.",
     "install": "Installieren",
     "installing": "arbeiten",
     "installed": "installiert",

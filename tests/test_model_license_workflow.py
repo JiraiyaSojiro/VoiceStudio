@@ -358,7 +358,7 @@ class ProductionTests(unittest.TestCase):
 
     def test_production_rows_never_use_synthetic_positive_fixtures(self):
         registry = ml.load_registry()
-        self.assertEqual(len(registry["models"]), 57)
+        self.assertEqual(len(registry["models"]), 60)
         self.assertEqual(len(registry["dynamic_assets"]), 7)
         for row in registry["models"]:
             self.assertEqual(row["component_closure"], "incomplete")
@@ -381,7 +381,13 @@ class ProductionTests(unittest.TestCase):
         expected = {r["id"]: r["runtime_revision"] for r in data["models"]
                     if r["runtime_pin_scope"] == "central"}
         self.assertEqual(CURATED_REVISIONS, expected)
-        self.assertEqual(len(expected), 43)
+        self.assertEqual(len(expected), 46)
+        self.assertEqual(expected.pop("ThuraAung1601/speecht5_for_thai_tts_v1"),
+                         "f8c8b0369c26119c8dbf79e3e8d907c43286604c")
+        self.assertEqual(expected.pop("microsoft/speecht5_hifigan"),
+                         "bb6f429406e86a9992357a972c0698b22043307d")
+        self.assertEqual(expected.pop("Matthijs/cmu-arctic-xvectors"),
+                         "5c1297a9eb6c91714ea77c0d4ac5aca9b6a952e5")
         self.assertEqual(expected.pop("OpenMOSS-Team/MOSS-Audio-Tokenizer"),
                          "3cd226ba2947efa357ef453bcad111b6eafba782")
         # Preserve ALL 42 pre-existing pins from base 06c6e077 unchanged.

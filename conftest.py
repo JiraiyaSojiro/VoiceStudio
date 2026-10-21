@@ -3,8 +3,13 @@
 Only fixtures that both suites need live here; each suite's own conftest.py
 still owns its import path and hermetic data dir.
 """
+import os
 import sys
 import types
+
+# This fork defaults commercial-safe mode ON. The suite keeps the upstream
+# OmniVoice default by turning the gate off, unless a test pops the variable.
+os.environ.setdefault("VOICESTUDIO_COMMERCIAL_SAFE", "0")
 
 import pytest
 

@@ -29,7 +29,8 @@ approval), [Windows](../install/windows.md), [Linux](../install/linux.md),
 
 | Engine | Guide | Runs on | Cloning | Enabled by |
 |---|---|---|---|---|
-| VoiceStudio (OmniVoice) — **default** | [omnivoice](omnivoice.md) | CUDA · MPS · CPU | ✅ | installed by default |
+| SpeechT5 Thai — **default when commercial-safe mode is on** | [speecht5-thai](speecht5-thai.md) | CPU · CUDA | — (7 preset timbres) | CPU torch + transformers |
+| VoiceStudio (OmniVoice) — default when commercial-safe mode is off | [omnivoice](omnivoice.md) | CUDA · MPS · CPU | ✅ | installed by default; blocked for ads |
 | VoxCPM2 | [voxcpm2](voxcpm2.md) | CUDA · MPS · CPU | ✅ + voice design | `pip install "voxcpm>=2.0.3"` |
 | MOSS-TTS-Nano | [moss-tts-nano](moss-tts-nano.md) | CUDA · CPU | ✅ (ref only) | clone + `uv pip install -e .` |
 | KittenTTS | [kittentts](kittentts.md) | CPU | — (8 preset voices) | `pip install kittentts` |

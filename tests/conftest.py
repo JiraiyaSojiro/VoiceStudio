@@ -5,6 +5,10 @@ import sys
 import tempfile
 import time
 
+# Fork default is commercial-safe ON. Tests keep the upstream engine default
+# unless they pop this variable. setdefault so an explicit opt-in still wins.
+os.environ.setdefault("VOICESTUDIO_COMMERCIAL_SAFE", "0")
+
 # Backend runs with `--app-dir backend`, so tests must do the same.
 _BACKEND = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
 if _BACKEND not in sys.path:

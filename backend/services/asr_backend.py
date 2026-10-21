@@ -3149,10 +3149,13 @@ def backend_model_repos(backend: ASRBackend) -> list[str]:
 
 
 def ensure_backend_licence(backend: ASRBackend) -> None:
-    """Raise ``ModelLicenceNotAccepted`` before an unaccepted model is used."""
+    """Raise before an unaccepted or non-commercial model is used."""
+    from core.commercial_safe import assert_repos_allowed
     from services.model_acceptance import ensure_accepted
 
-    ensure_accepted(backend_model_repos(backend))
+    repos = backend_model_repos(backend)
+    ensure_accepted(repos)
+    assert_repos_allowed(repos)
 
 
 def _licence_accepted(repo_id: str | None) -> bool:

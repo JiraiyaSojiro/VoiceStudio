@@ -28,6 +28,9 @@ _NLLB_REPO_ID = "facebook/nllb-200-distilled-600M"
 
 def _load_nllb_component(factory):
     """Load explicitly installed NLLB weights at their reviewed revision."""
+    from core.commercial_safe import assert_repo_allowed
+
+    assert_repo_allowed(_NLLB_REPO_ID)
     return factory.from_pretrained(
         _NLLB_REPO_ID,
         revision=revision_for(_NLLB_REPO_ID),

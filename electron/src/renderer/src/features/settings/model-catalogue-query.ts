@@ -27,9 +27,15 @@ export interface CatalogueModel {
   /** Versioned disclosure; absence is unverified, never a permission grant. */
   license_info?: ModelLicenseInfo;
   license_acceptance?: ModelLicenceAcceptance;
+  /** Present when the backend is this fork. Missing fields do not block. */
+  commercial_ok?: boolean;
+  commercial_status?: 'off' | 'allow' | 'conditions' | 'blocked';
+  commercial_reason?: string;
+  commercial_license?: string;
 }
 
 export interface ModelCatalogueResponse {
+  commercial_safe?: boolean;
   models: CatalogueModel[];
   total_installed_bytes?: number;
   disk_free_gb?: number;

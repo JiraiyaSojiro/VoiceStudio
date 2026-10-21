@@ -603,8 +603,11 @@ def list_models():
     Uses a 10 s response cache to avoid repeated ``scan_cache_dir()`` disk
     walks when the frontend polls.
     """
+    from core.commercial_safe import THAI_TTS_REPO, assess, enabled
+
     platform_tags = _current_platform_tags()
-    cache_key = "models:local:" + ",".join(sorted(platform_tags))
+    safe = enabled()
+    cache_key = "models:local:" + ",".join(sorted(platform_tags)) + f":safe={int(safe)}"
     cached_response = _cached(cache_key)
     if cached_response is not None:
         return cached_response
@@ -637,6 +640,17 @@ def list_models():
         # weight shard didn't). Treat that as not-installed + incomplete so the
         # wizard re-offers the download instead of stranding the user (#622).
         incomplete = on_disk and not cache_is_complete(m)
+        decision = assess(m["repo_id"])
+        curated = _model_curated(m, host_tags)
+        required = bool(m.get("required", False))
+        if safe and not decision.allowed:
+            # The yaml still marks OmniVoice required. This response must not
+            # tell a commercial-safe install to download it.
+            required = False
+            curated = False
+        if safe and m["repo_id"] == THAI_TTS_REPO:
+            required = True
+            curated = True
         out.append({
             **m,
             "installed": on_disk and not incomplete,
@@ -646,12 +660,15 @@ def list_models():
             "supported": _model_supported(m),
             # Curated "best for your system" pick (curated_on in models.yaml) —
             # drives the recommended badge in the wizard and Settings model store.
-            "curated": _model_curated(m, host_tags),
+            "curated": curated,
+            "required": required,
             "license_info": _model_license_info(m["repo_id"]),
             "license_acceptance": _model_licence_acceptance(m["repo_id"]),
+            **decision.as_dict(),
         })
     response = {
         "target": "local",
+        "commercial_safe": safe,
         "models": out,
         "total_installed_bytes": sum(m["size_on_disk_bytes"] for m in out),
         "hf_cache_dir": hf_cache_dir(),
@@ -700,11 +717,19 @@ def recommendations():
     else:
         device_label = f"{target_os} / {target_arch}"
 
+    from core.commercial_safe import THAI_TTS_REPO, assess, enabled
+
+    safe = enabled()
     # Curated preset for this host, in catalog order (required entries lead).
     curated = [
         m for m in KNOWN_MODELS
         if _model_curated(m, tags) and _model_supported(m)
+        and (not safe or assess(m["repo_id"]).allowed)
     ]
+    if safe:
+        thai = next((m for m in KNOWN_MODELS if m["repo_id"] == THAI_TTS_REPO), None)
+        if thai is not None and _model_supported(thai):
+            curated = [thai] + [m for m in curated if m["repo_id"] != THAI_TTS_REPO]
 
     if not (is_mac_arm or has_cuda or has_rocm):
         # CPU-only preset: lead with the light Whisper (small) so a user working
@@ -744,6 +769,12 @@ def recommendations():
             "accuracy and Turbo when you can spare the time and RAM, Whisper Tiny "
             "(ONNX) for live dictation, KittenTTS for instant English TTS."
         )
+    if safe:
+        rationale = (
+            "Commercial-safe preset: SpeechT5 Thai (MIT) is the voice for ads. "
+            "Optional picks are models whose licenses allow commercial use. "
+            "Non-commercial weights such as OmniVoice are left out."
+        )
 
     cached_ids: set[str] = set()
     try:
@@ -766,14 +797,18 @@ def recommendations():
         # Mirror /models: a truncated cache (weights missing) is not installed, so
         # the wizard counts it toward the remaining download instead of "all set".
         installed = rid in cached_ids and cache_is_complete(meta)
+        required = bool(meta.get("required", False))
+        if safe and rid == THAI_TTS_REPO:
+            required = True
         entries.append({
             "repo_id": rid,
             "label": meta.get("label", rid),
             "role": meta.get("role", ""),
             "size_gb": meta.get("size_gb", 0),
-            "required": bool(meta.get("required", False)),
+            "required": required,
             "note": meta.get("note"),
             "installed": installed,
+            **assess(rid).as_dict(),
         })
 
     to_download_gb = sum(e["size_gb"] for e in entries if not e["installed"])
@@ -792,6 +827,7 @@ def recommendations():
             "label": device_label,
         },
         "rationale": rationale,
+        "commercial_safe": safe,
         "models": entries,
         "download_gb_remaining": round(to_download_gb, 2),
         "total_gb": round(sum(e["size_gb"] for e in entries), 2),

@@ -73,10 +73,13 @@ def selected_model_repos() -> list[str]:
 
 
 def ensure_selected_accepted() -> None:
-    """Raise ``ModelLicenceNotAccepted`` before an unaccepted diarisation model runs."""
+    """Raise before an unaccepted or non-commercial diarisation model runs."""
+    from core.commercial_safe import assert_repos_allowed
     from services.model_acceptance import ensure_accepted
 
-    ensure_accepted(selected_model_repos())
+    repos = selected_model_repos()
+    ensure_accepted(repos)
+    assert_repos_allowed(repos)
 
 
 def select_backend(backend: str) -> None:

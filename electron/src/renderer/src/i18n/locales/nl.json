@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "Downloaden",
+    "commercialSafeBanner": "De commercieel veilige modus staat aan. Modellen waarvan de licentie geen reclame toestaat, blijven geblokkeerd.",
+    "commercialBlocked": "Niet voor commercieel gebruik",
+    "commercialConditions": "Commercieel gebruik heeft extra voorwaarden. Lees de licentie voordat je publiceert.",
+    "commercialDownloadBlocked": "De licentie van dit model staat commercieel gebruik niet toe.",
     "install": "Installeren",
     "installing": "werken",
     "installed": "geïnstalleerd",

@@ -11,11 +11,17 @@ metadata and the backend fallback mirror it.
 **Highlights**
 
 - Preview iOS and Android companion apps for your own VoiceStudio
+- Thai product-ad voiceovers on CPU from commercially licensed weights
 
 ### Added
 
+- Commercial-safe mode blocks models whose license does not allow ads, and adds MIT SpeechT5 Thai plus an Apache-2.0 VoxCPM2 clone path for shop voiceovers
 - Preview iOS and Android companion apps: drive your own VoiceStudio from your phone (speak, voices and cloning, dubbing, dictation) after pairing by QR code; build from source for now ([guide](docs/mobile.md)) (#2965)
 - Smart Fit speed limits: set the fastest and slowest speed dubbing may apply to a line, from the Timing section (#3026) — thanks @MoonDragon-MD!
+
+### Docs
+
+- License audit of every catalog model, and a Thai how-to for CPU shop voiceovers
 
 ### Fixed
 

@@ -1,6 +1,6 @@
 # Model licence inventory
 
-`backend/config/model_licenses.json` records 56 configured model repositories and
+`backend/config/model_licenses.json` records 60 configured model repositories and
 seven unresolved asset families. Each record has an upstream licence label,
 commercial-use review flag, credit text, source/evidence links and review notes.
 Pinned model-card revisions identify the evidence inspected; they do not pin
@@ -58,7 +58,7 @@ that all selected assets or activities are covered.
 
 `scripts/generate_model_license_data.py` generates
 [`model-license-data.json`](model-license-data.json) from the same registry and
-catalogue without importing engines or downloading models. It includes all 56
+catalogue without importing engines or downloading models. It includes all 60
 inventory rows, including dependencies outside the visible catalogue, the
 dynamic families, registry version/digest and source provenance. The website
 vendors these exact bytes as `public/model-license-data.json`, with the immutable

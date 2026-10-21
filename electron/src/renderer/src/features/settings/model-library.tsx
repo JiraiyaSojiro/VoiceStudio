@@ -57,6 +57,11 @@ interface RecommendedModel {
   size_gb: number;
   required: boolean;
   installed: boolean;
+  commercial_ok?: boolean;
+}
+
+function commercialDownloadBlocked(model: { commercial_ok?: boolean }, commercialSafe: boolean | undefined) {
+  return commercialSafe === true && model.commercial_ok === false;
 }
 
 interface ModelRecommendations {
@@ -517,7 +522,7 @@ export function SystemRecommendations() {
                     <Button
                       size="icon-xs"
                       variant="ghost"
-                      disabled={busy || starting.size > 0}
+                      disabled={busy || starting.size > 0 || model.commercial_ok === false}
                       title={t('models.reco_install_one', {
                         label: model.label,
                       })}
@@ -589,6 +594,7 @@ export function ModelLibrary({
     staleTime: 5_000,
     refetchInterval: () => relaxWhenBackendBusy(15_000),
   });
+  const commercialSafe = catalogue.data?.commercial_safe;
   const models = catalogue.data?.models.filter((model) => {
     if (setup) return model.supported !== false;
     if (family === 'dictation') return Boolean(model.dictation_id);
@@ -933,6 +939,22 @@ export function ModelLibrary({
           info={model.license_info}
           acceptance={model.license_acceptance}
         />
+        {commercialDownloadBlocked(model, commercialSafe) && (
+          <span
+            className="rounded-full bg-destructive/10 px-2 py-1 text-xs text-destructive"
+            title={model.commercial_reason}
+          >
+            {t('modelMaintenance.commercialBlocked')}
+          </span>
+        )}
+        {commercialSafe && model.commercial_status === 'conditions' && (
+          <span
+            className="rounded-full bg-warning/10 px-2 py-1 text-xs text-warning"
+            title={model.commercial_reason}
+          >
+            {t('modelMaintenance.commercialConditions')}
+          </span>
+        )}
         {!activeAsrModel &&
           (activeEngineModel || activeDictationModel || activeDiarisationModel) && (
             <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-xs text-primary">
@@ -1189,8 +1211,12 @@ export function ModelLibrary({
                 <Button
                   size="icon-sm"
                   variant="ghost"
-                  disabled={Boolean(pending)}
-                  title={t('modelMaintenance.reinstall')}
+                  disabled={Boolean(pending) || commercialDownloadBlocked(model, commercialSafe)}
+                  title={
+                    commercialDownloadBlocked(model, commercialSafe)
+                      ? t('modelMaintenance.commercialDownloadBlocked')
+                      : t('modelMaintenance.reinstall')
+                  }
                   aria-label={t('modelMaintenance.reinstall')}
                   onClick={() => setConfirmation({ kind: 'reinstall', model })}
                 >
@@ -1221,7 +1247,12 @@ export function ModelLibrary({
             <Button
               size="sm"
               variant="outline"
-              disabled={Boolean(pending) || !model.supported}
+              disabled={Boolean(pending) || !model.supported || commercialDownloadBlocked(model, commercialSafe)}
+              title={
+                commercialDownloadBlocked(model, commercialSafe)
+                  ? t('modelMaintenance.commercialDownloadBlocked')
+                  : undefined
+              }
               onClick={() => void action(model.repo_id)}
             >
               <WrenchIcon />
@@ -1244,11 +1275,24 @@ export function ModelLibrary({
           <Button
             size="sm"
             variant="outline"
-            disabled={Boolean(pending) || !model.supported}
+            disabled={
+              Boolean(pending) || !model.supported || commercialDownloadBlocked(model, commercialSafe)
+            }
+            title={
+              commercialDownloadBlocked(model, commercialSafe)
+                ? t('modelMaintenance.commercialDownloadBlocked')
+                : undefined
+            }
             onClick={() => void action(model.repo_id)}
           >
             <DownloadIcon />
-            {t(model.supported ? 'modelMaintenance.download' : 'modelSettings.unavailable')}
+            {t(
+              commercialDownloadBlocked(model, commercialSafe)
+                ? 'modelMaintenance.commercialBlocked'
+                : model.supported
+                  ? 'modelMaintenance.download'
+                  : 'modelSettings.unavailable',
+            )}
           </Button>
         )}
       </SettingsRow>
@@ -1261,6 +1305,14 @@ export function ModelLibrary({
         icon={icon}
         contentVariant="cards"
       >
+        {commercialSafe && (
+          <p
+            role="status"
+            className="col-span-full rounded-xl border border-border/60 bg-card/40 px-4 py-3 text-sm text-muted-foreground"
+          >
+            {t('modelMaintenance.commercialSafeBanner')}
+          </p>
+        )}
         {!setup && (
           <div className="glass-panel col-span-full flex items-center gap-2 rounded-xl border border-border/60 bg-card/40 px-4 py-3 shadow-xs/5">
             <SearchIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
