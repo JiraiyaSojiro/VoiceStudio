@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "İndir",
+    "commercialSafeBanner": "Ticari güvenli mod açık. Lisansı reklama izin vermeyen modeller engelli kalır.",
+    "commercialBlocked": "Ticari kullanım için değil",
+    "commercialConditions": "Ticari kullanımın ek koşulları var. Yayınlamadan önce lisansı okuyun.",
+    "commercialDownloadBlocked": "Bu modelin lisansı ticari kullanıma izin vermez.",
     "install": "Yükle",
     "installing": "çalışıyor",
     "installed": "yüklü",

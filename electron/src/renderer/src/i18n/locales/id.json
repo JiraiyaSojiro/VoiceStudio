@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "Unduh",
+    "commercialSafeBanner": "Mode aman komersial aktif. Model yang lisensinya tidak mengizinkan iklan tetap diblokir.",
+    "commercialBlocked": "Bukan untuk penggunaan komersial",
+    "commercialConditions": "Penggunaan komersial punya syarat tambahan. Baca lisensi sebelum menerbitkan.",
+    "commercialDownloadBlocked": "Lisensi model ini tidak mengizinkan penggunaan komersial.",
     "install": "Instal",
     "installing": "bekerja",
     "installed": "dipasang",

@@ -388,6 +388,10 @@
   },
   "modelMaintenance": {
     "download": "Pobierz",
+    "commercialSafeBanner": "Tryb bezpieczny komercyjnie jest włączony. Modele, których licencja nie pozwala na reklamy, pozostają zablokowane.",
+    "commercialBlocked": "Nie do użytku komercyjnego",
+    "commercialConditions": "Użytek komercyjny ma dodatkowe warunki. Przeczytaj licencję przed publikacją.",
+    "commercialDownloadBlocked": "Licencja tego modelu nie pozwala na użytek komercyjny.",
     "install": "Zainstaluj",
     "installing": "pracujący",
     "installed": "zainstalowany",

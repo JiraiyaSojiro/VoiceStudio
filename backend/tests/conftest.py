@@ -28,6 +28,10 @@ import importlib.abc
 import importlib.machinery
 import os
 import sys
+
+# Fork default is commercial-safe ON. Tests keep the upstream engine default
+# unless they pop this variable. setdefault so an explicit opt-in still wins.
+os.environ.setdefault("VOICESTUDIO_COMMERCIAL_SAFE", "0")
 import tempfile
 
 # Backend runs with `--app-dir backend`, so tests must do the same.

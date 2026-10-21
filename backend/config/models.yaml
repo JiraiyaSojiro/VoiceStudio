@@ -312,6 +312,17 @@ models:
     size_gb: 0.08
     curated_on: [all]
 
+  - repo_id: "ThuraAung1601/speecht5_for_thai_tts_v1"
+    label: "SpeechT5 Thai (MIT, preset voices, CPU)"
+    role: TTS
+    engines: [speecht5-thai]
+    size_gb: 0.6
+    curated_on: [cpu]
+    note: "MIT Thai TTS for short commercial voiceovers. Fixed CMU Arctic timbre, not a clone. The MIT HiFi-GAN vocoder is downloaded with it."
+    dependencies:
+      - repo_id: "microsoft/speecht5_hifigan"
+        required_files: ["pytorch_model.bin"]
+
   - repo_id: "openbmb/VoxCPM2"
     label: "VoxCPM2 (30 languages, voice cloning and design)"
     role: TTS

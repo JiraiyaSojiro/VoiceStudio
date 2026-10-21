@@ -1521,6 +1521,7 @@ from core.failure import (  # noqa: E402
     invalid_media_file_detail,
     no_audio_track_detail,
 )
+from core.commercial_safe import CommercialUseBlocked  # noqa: E402
 from services.model_acceptance import ModelLicenceNotAccepted  # noqa: E402
 
 
@@ -1534,6 +1535,16 @@ async def no_audio_track_handler(request: Request, exc: NoAudioTrackError):
     return JSONResponse(
         status_code=422,
         content={"detail": no_audio_track_detail()},
+        headers=_cors_headers_for(request),
+    )
+
+
+@app.exception_handler(CommercialUseBlocked)
+async def commercial_use_blocked_handler(request: Request, exc: CommercialUseBlocked):
+    """403 when commercial-safe mode refuses a non-commercial or unverified model."""
+    return JSONResponse(
+        status_code=403,
+        content={"detail": exc.detail()},
         headers=_cors_headers_for(request),
     )
 

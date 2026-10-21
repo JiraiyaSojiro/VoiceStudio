@@ -386,6 +386,10 @@
   },
   "modelMaintenance": {
     "download": "Baixar",
+    "commercialSafeBanner": "O modo seguro para uso comercial está ligado. Modelos cuja licença não permite anúncios continuam bloqueados.",
+    "commercialBlocked": "Não é para uso comercial",
+    "commercialConditions": "O uso comercial tem condições extra. Leia a licença antes de publicar.",
+    "commercialDownloadBlocked": "A licença deste modelo não permite uso comercial.",
     "install": "Instalar",
     "installing": "trabalhando",
     "installed": "instalado",

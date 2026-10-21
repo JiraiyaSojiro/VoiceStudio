@@ -384,6 +384,10 @@
   },
   "modelMaintenance": {
     "download": "Ladda ner",
+    "commercialSafeBanner": "Kommersiellt säkert läge är på. Modeller vars licens inte tillåter reklam förblir blockerade.",
+    "commercialBlocked": "Inte för kommersiell användning",
+    "commercialConditions": "Kommersiell användning har extra villkor. Läs licensen innan du publicerar.",
+    "commercialDownloadBlocked": "Den här modellens licens tillåter inte kommersiell användning.",
     "install": "Installera",
     "installing": "arbetar",
     "installed": "installerat",

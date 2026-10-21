@@ -392,6 +392,10 @@
   },
   "modelMaintenance": {
     "download": "تحميل",
+    "commercialSafeBanner": "الوضع الآمن للاستخدام التجاري مفعّل. النماذج التي لا يسمح ترخيصها بالإعلانات تبقى محظورة.",
+    "commercialBlocked": "غير مسموح للاستخدام التجاري",
+    "commercialConditions": "الاستخدام التجاري له شروط إضافية. اقرأ الترخيص قبل النشر.",
+    "commercialDownloadBlocked": "ترخيص هذا النموذج لا يسمح بالاستخدام التجاري.",
     "install": "تثبيت",
     "installing": "العمل",
     "installed": "مثبتة",

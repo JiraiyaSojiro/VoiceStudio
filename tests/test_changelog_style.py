@@ -62,6 +62,8 @@ _REF_ALLOWLIST = (
     "Dubbing and batch jobs accept only plain language codes",
     "Saved voice, gallery and call-recording files are read only from inside",
     "Engine install folders can no longer be set to a typed path",
+    # fork commercial-safe Thai voiceover, no upstream issue
+    "Commercial-safe mode",
 )
 
 _HEADING = re.compile(r"^## \[([^\]]+)\](?:\s*[—–-]\s*(.*))?$")

@@ -956,6 +956,17 @@ def select_engine(req: SelectEngineRequest):
             asr_backend.select_faster_whisper_model(req.model_id)
         except ValueError as exc:
             raise HTTPException(409, str(exc)) from exc
+    from core.commercial_safe import assert_engine_weights
+
+    identity = req.model_id if isinstance(req.model_id, str) and "/" in req.model_id else None
+    if req.family == "tts" and req.backend_id == "mlx-audio" and req.model_id:
+        identity = tts_backend.MLXAudioBackend.CURATED_MODELS.get(req.model_id, req.model_id)
+    elif identity is None and req.family == "tts":
+        try:
+            identity = tts_backend.get_backend_class(req.backend_id).configured_identity()
+        except Exception:  # noqa: BLE001 — a probe failure must not skip the catalog repo
+            identity = None
+    assert_engine_weights(req.backend_id, identity)
     prefs.set_(pref_key, req.backend_id)
     return {
         "family": req.family,

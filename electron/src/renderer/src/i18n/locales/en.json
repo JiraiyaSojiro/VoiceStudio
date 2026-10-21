@@ -731,6 +731,10 @@
   },
   "modelMaintenance": {
     "download": "Download",
+    "commercialSafeBanner": "Commercial-safe mode is on. Models whose license does not allow ads stay blocked.",
+    "commercialBlocked": "Not for commercial use",
+    "commercialConditions": "Commercial use has extra conditions. Read the license before you publish.",
+    "commercialDownloadBlocked": "This model's license does not allow commercial use.",
     "install": "Install",
     "installing": "working",
     "installed": "installed",
